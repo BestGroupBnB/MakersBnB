@@ -18,13 +18,13 @@ class WebApplicationServer < Sinatra::Base
     register Sinatra::Reloader
 
     # In development mode, connect to the development database
-    db = DatabaseConnection.new("localhost", "web_application_dev")
+    db = DatabaseConnection.new("localhost", "bestgroupbnb_dev")
     $global = { db: db }
   end
 
   configure :test do
     # In test mode, connect to the test database
-    db = DatabaseConnection.new("localhost", "web_application_test")
+    db = DatabaseConnection.new("localhost", "bestgroupbnb_test")
     $global = { db: db }
   end
 

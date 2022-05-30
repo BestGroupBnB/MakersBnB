@@ -5,6 +5,12 @@ require "database_connection"
 # of this file, you should rerun `ruby reset_tables.rb` to ensure that your
 # database tables are re-created.
 
+# # Create the databases and set up the tables
+# ; createdb bestgroupbnb_dev
+# ; createdb bestgroupbnb_test
+# ; ruby reset_tables.rb
+# ; change in app.rb, reset_tables.rb
+
 def reset_tables(db)
   db.run("DROP TABLE IF EXISTS animals;")
   db.run("CREATE TABLE animals (id SERIAL PRIMARY KEY, species TEXT NOT NULL);")
@@ -15,8 +21,8 @@ def reset_tables(db)
   #   db.run("CREATE TABLE ... (id SERIAL PRIMARY KEY, ...);")
 end
 
-dev_db = DatabaseConnection.new("localhost", "web_application_dev")
+dev_db = DatabaseConnection.new("localhost", "bestgroupbnb_dev")
 reset_tables(dev_db)
 
-test_db = DatabaseConnection.new("localhost", "web_application_test")
+test_db = DatabaseConnection.new("localhost", "bestgroupbnb_test")
 reset_tables(test_db)
