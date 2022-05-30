@@ -56,8 +56,8 @@ fully developed example application for you to investigate.
 ; bundle install
 
 # Create the databases and set up the tables
-; createdb web_application_dev
-; createdb web_application_test
+; createdb bestgroupbnb_dev
+; createdb bestgroupbnb_test
 ; ruby reset_tables.rb
 
 # And check the project is healthy
