@@ -6,6 +6,6 @@ class DatabaseHelpers
   end
 
   def self.test_db_connection
-    $test_connection ||= DatabaseConnection.new("localhost", "web_application_test")
+    $test_connection ||= DatabaseConnection.new("localhost", "bestgroupbnb_test")
   end
 end
