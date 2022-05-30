@@ -5,6 +5,8 @@ require 'sinatra/reloader'
 
 # You will want to require your data model class here
 require "database_connection"
+require "space_entity"
+require "spaces_table"
 # require "animals_table"
 # require "animal_entity"
 
@@ -18,13 +20,13 @@ class WebApplicationServer < Sinatra::Base
     register Sinatra::Reloader
 
     # In development mode, connect to the development database
-    db = DatabaseConnection.new("localhost", "web_application_dev")
+    db = DatabaseConnection.new("localhost", "bestgroupbnb_dev")
     $global = { db: db }
   end
 
   configure :test do
     # In test mode, connect to the test database
-    db = DatabaseConnection.new("localhost", "web_application_test")
+    db = DatabaseConnection.new("localhost", "bestgroupbnb_test")
     $global = { db: db }
   end
 
@@ -37,6 +39,39 @@ class WebApplicationServer < Sinatra::Base
 
   # YOUR CODE GOES BELOW THIS LINE
 
+# get "/spaces" do
+#   advert_entries = advert.list
+#   erb :advert_entry_index, locals: {
+#     advert_entries: advert_entries
+#   }
+# end
+
+
+
+
   # ...
 
 end
+
+
+# get "/advert" do
+#   advert_entries = advert.list
+#   erb :advert_entry_index, locals: {
+#     advert_entries: advert_entries
+#   }
+# end
+
+# get "/advert/new" do
+#   erb :advert_entry_new
+# end
+
+# post "/advert" do
+#   advert_entry = AdvertEntryEntity.new(params[:number], params[:description])
+#   advert.add(advert_entry)
+#   redirect "/advert"
+# end
+
+# delete '/advert/:index' do
+#   advert.remove(params[:index].to_i)
+#   redirect '/advert'
+# end
