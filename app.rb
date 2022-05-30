@@ -38,5 +38,8 @@ class WebApplicationServer < Sinatra::Base
   # YOUR CODE GOES BELOW THIS LINE
 
   # ...
+  get "/" do 
+    erb :index 
+  end 
 
 end

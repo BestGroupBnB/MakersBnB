@@ -12,8 +12,8 @@ require "database_connection"
 # ; change in app.rb, reset_tables.rb
 
 def reset_tables(db)
-  db.run("DROP TABLE IF EXISTS animals;")
-  db.run("CREATE TABLE animals (id SERIAL PRIMARY KEY, species TEXT NOT NULL);")
+  db.run("DROP TABLE IF EXISTS users;")
+  db.run("CREATE TABLE users (id SERIAL PRIMARY KEY, email TEXT NOT NULL, password TEXT NOT NULL);")
 
   # Add your table creation SQL here
   # Each one should be a pair of lines:
