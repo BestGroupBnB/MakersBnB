@@ -18,6 +18,21 @@ class SpacesTable
     return result[0]["id"]
   end
 
+  def remove(index)
+    @db.run("DELETE FROM spaces WHERE id = $1;", [index])
+  end
+
+  def update(index, name, description, price, date_from, date_to)
+    @db.run("UPDATE spaces SET name = $1, description = $2, price = $3, date_from = $4, date_to = $5 WHERE id = $6;",
+    [name, description, price, date_from, date_to, index])
+  end
+
+  def get(index)
+    result = @db.run("SELECT * FROM spaces WHERE id = $1;", [index])
+    return row_to_object(result[0])
+
+  end
+
 
   private
 

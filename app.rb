@@ -7,8 +7,6 @@ require 'sinatra/reloader'
 require "database_connection"
 require "space_entity"
 require "spaces_table"
-# require "animals_table"
-# require "animal_entity"
 
 class WebApplicationServer < Sinatra::Base
   # This line allows us to send HTTP Verbs like `DELETE` using forms
@@ -29,49 +27,49 @@ class WebApplicationServer < Sinatra::Base
     db = DatabaseConnection.new("localhost", "bestgroupbnb_test")
     $global = { db: db }
   end
-
-  # def animals_table
-  #   $global[:animals_table] ||= AnimalsTable.new($global[:db])
-  # end
+  
+  def spaces_table
+    $global[:spaces_table] ||= SpacesTable.new($global[:db])
+  end
 
   # Start your server using `rackup`.
   # It will sit there waiting for requests. It isn't broken!
 
-  # YOUR CODE GOES BELOW THIS LINE
+  get "/spaces" do
+    spaces_entries = spaces_table.list
+    erb :spaces, locals: {
+      spaces_entries: spaces_entries
+    }
+   end
 
-# get "/spaces" do
-#   advert_entries = advert.list
-#   erb :advert_entry_index, locals: {
-#     advert_entries: advert_entries
-#   }
-# end
+  get "/spaces/new" do
+    erb :spaces_new
+  end
 
+  post "/spaces" do
+    space_entry = SpaceEntity.new(params[:name], params[:description], params[:price], params[:date_from], params[:date_to])
+    spaces_table.add(space_entry)
+    redirect "/spaces"
+  end
 
+  delete "/spaces/:index" do
+    spaces_table.remove(params[:index].to_i)
+    redirect "/spaces"
+  end
 
+  get "/spaces/:index/edit" do
+    space_index = params[:index].to_i
+    erb :spaces_edit, locals: {
+      index: space_index,
+      space: spaces_table.get(space_index)
+    }
 
-  # ...
+  end
+
+  patch "/spaces/:index" do
+    space_index = params[:index]
+    spaces_table.update(space_index, params[:name], params[:description], params[:price], params[:date_from], params[:date_to])
+    redirect "/spaces"
+  end
 
 end
-
-
-# get "/advert" do
-#   advert_entries = advert.list
-#   erb :advert_entry_index, locals: {
-#     advert_entries: advert_entries
-#   }
-# end
-
-# get "/advert/new" do
-#   erb :advert_entry_new
-# end
-
-# post "/advert" do
-#   advert_entry = AdvertEntryEntity.new(params[:number], params[:description])
-#   advert.add(advert_entry)
-#   redirect "/advert"
-# end
-
-# delete '/advert/:index' do
-#   advert.remove(params[:index].to_i)
-#   redirect '/advert'
-# end
