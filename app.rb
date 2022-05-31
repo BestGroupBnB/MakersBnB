@@ -7,8 +7,10 @@ require 'sinatra/reloader'
 require "database_connection"
 require "users_table"
 require "user_entity"
-# require "animals_table"
-# require "animal_entity"
+
+require "space_entity"
+require "spaces_table"
+
 
 class WebApplicationServer < Sinatra::Base
   # This line allows us to send HTTP Verbs like `DELETE` using forms
@@ -32,6 +34,10 @@ class WebApplicationServer < Sinatra::Base
 
   def users_table
     $global[:users_table] ||= UsersTable.new($global[:db])
+  end
+
+  def spaces_table
+    $global[:spaces_table] ||= SpacesTable.new($global[:db])
   end
 
   # Start your server using `rackup`.
@@ -74,12 +80,12 @@ class WebApplicationServer < Sinatra::Base
     # return "Authorized" # placeholders
   end
 
-  # spaces
-  get "/spaces" do 
-    p "session id: #{session[:user]}"
-    redirect "/login" unless session[:user]
-    erb :spaces
-  end
+  #   spaces
+  #   get "/spaces" do 
+  #     p "session id: #{session[:user]}"
+  #     redirect "/login" unless session[:user]
+  #     erb :spaces
+  #   end
 
   # logout
   get "/logout" do
@@ -87,4 +93,43 @@ class WebApplicationServer < Sinatra::Base
     p "session: #{session[:user]}"
     redirect "/login"
   end
+  
+  # spaces
+  get "/spaces" do
+    spaces_entries = spaces_table.list
+    erb :spaces, locals: {
+      spaces_entries: spaces_entries
+    }
+   end
+
+  get "/spaces/new" do
+    erb :spaces_new
+  end
+
+  post "/spaces" do
+    space_entry = SpaceEntity.new(params[:name], params[:description], params[:price], params[:date_from], params[:date_to])
+    spaces_table.add(space_entry)
+    redirect "/spaces"
+  end
+
+  delete "/spaces/:index" do
+    spaces_table.remove(params[:index].to_i)
+    redirect "/spaces"
+  end
+
+  get "/spaces/:index/edit" do
+    space_index = params[:index].to_i
+    erb :spaces_edit, locals: {
+      index: space_index,
+      space: spaces_table.get(space_index)
+    }
+
+  end
+
+  patch "/spaces/:index" do
+    space_index = params[:index]
+    spaces_table.update(space_index, params[:name], params[:description], params[:price], params[:date_from], params[:date_to])
+    redirect "/spaces"
+  end
+
 end

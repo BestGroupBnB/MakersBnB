@@ -1,3 +1,34 @@
-<h1>spaces</h1>
-
 <a href="/logout">Logout</a>
+
+<% if spaces_entries.empty? %>
+  <center><h1>There are no spaces available.</h1></center>
+  <p>
+    <center><a href="/spaces/new">List a Space</a></center>
+  </p>
+<% else %>
+<center><h1>Book a Space</h1></center>
+<p>
+    <center><a href="/spaces/new">List a Space</a></center>
+  </p>
+  <% spaces_entries.each do |space| %>
+    <section>
+      <h2><%= space.name %></h2>
+      Description, <%= space.description %>
+      <%= space.price %>
+      <%= space.date_from %>
+      <%= space.date_to %>
+
+      <p>
+        <a href="/spaces/<%= space.id %>/edit">
+          <button>Edit <%= space.name %></button>
+        </a>
+      </p>
+
+      <form action="/spaces/<%= space.id %>" method="POST">
+        <input type="hidden" name="_method" value="DELETE">
+        <button>Delete <%= space.name %></button>
+      </form>
+    </section>
+  <% end %>
+
+<% end %>
