@@ -24,8 +24,8 @@ class DatabaseConnection
       puts "This is probably a problem with your setup."
       exit
     end
-
-    @connection = PG.connect({ host: @host, dbname: @database_name })
+    #, user: "postgres", password: "root"
+    @connection = PG.connect({ host: @host, dbname: @database_name})
     puts "Connected to the database successfully.".green unless test_mode?
   rescue PG::Error => e
     exit_with_helpful_connection_message(e)
