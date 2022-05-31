@@ -5,6 +5,8 @@ require 'sinatra/reloader'
 
 # You will want to require your data model class here
 require "database_connection"
+require "users_table"
+require "user_entity"
 # require "animals_table"
 # require "animal_entity"
 
@@ -28,18 +30,57 @@ class WebApplicationServer < Sinatra::Base
     $global = { db: db }
   end
 
-  # def animals_table
-  #   $global[:animals_table] ||= AnimalsTable.new($global[:db])
-  # end
+  def users_table
+    $global[:users_table] ||= UsersTable.new($global[:db])
+  end
 
   # Start your server using `rackup`.
   # It will sit there waiting for requests. It isn't broken!
 
   # YOUR CODE GOES BELOW THIS LINE
+  enable :sessions
 
-  # ...
+  # sign up
   get "/" do 
     erb :index 
   end 
 
+  post "/users" do
+    email = params[:email] # UNIQUE
+    password = params[:password]
+    password_confirm = params[:password_confirm]
+    user_id = users_table.add(UserEntity.new(email,password,password_confirm))
+    redirect "/login"
+  end
+
+  # login
+  get "/login" do
+    erb :login
+  end
+
+  post "/login" do
+    email = params[:email] # UNIQUE
+    password = params[:password]
+    user = users_table.get_password_from_email(email)
+    if user.password == password
+      session[:user] = user.id 
+      redirect "/spaces"
+    end
+    return "Unauthorized" unless user.password == password # redirect "/spaces/user_id"
+    # return "Authorized" # placeholders
+  end
+
+  # spaces
+  get "/spaces" do 
+    p "session id: #{session[:user]}"
+    redirect "/login" unless session[:user]
+    erb :spaces
+  end
+
+  # logout
+  get "/logout" do
+    session.clear
+    p "session: #{session[:user]}"
+    redirect "/login"
+  end
 end

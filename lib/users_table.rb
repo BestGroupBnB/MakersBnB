@@ -14,6 +14,11 @@ class UsersTable
     return row_to_object(user[0])
   end
 
+  def get_password_from_email(email)
+    user = @db.run("SELECT * FROM users WHERE email=$1;",[email])
+    return row_to_object(user[0])
+  end
+
   def row_to_object(row)
     return UserEntity.new(
         row["email"],
