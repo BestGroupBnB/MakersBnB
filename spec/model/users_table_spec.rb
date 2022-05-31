@@ -17,4 +17,11 @@ RSpec.describe UsersTable do
     expect(result.password).to eql("password1")
     expect(result.id).to eql("1")
   end
+
+  it "prevents adding same email" do
+    db = clean_and_get_database
+    user = UsersTable.new(db)
+    user_id = user.add(UserEntity.new("spaceowner@gmail.com","password1","password1"))
+    expect(user.user_exists?("spaceowner@gmail.com")).to eq true
+  end 
 end

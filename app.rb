@@ -42,15 +42,19 @@ class WebApplicationServer < Sinatra::Base
 
   # sign up
   get "/" do 
-    erb :index 
+    erb :index, locals:{check: true, email:""}
   end 
 
   post "/users" do
-    email = params[:email] # UNIQUE
+    email = params[:email]
     password = params[:password]
-    password_confirm = params[:password_confirm]
-    user_id = users_table.add(UserEntity.new(email,password,password_confirm))
-    redirect "/login"
+    password_confirm = params[:password_confirm]      
+    if (password == password_confirm && !users_table.user_exists?(email))
+      user_id = users_table.add(UserEntity.new(email,password,password_confirm))
+      redirect "/login"
+    else 
+      erb :index, locals:{check: false, email: email}
+    end 
   end
 
   # login

@@ -1,17 +1,25 @@
 <h1>Sign up to MakersBnB</h1>
 
+
 <a href="/login">Login</a>
 
 <form action="/users" method="POST">
 <label for= "email">Email Address</label>
-<input type="text" name="email" id="email" required> 
+<input type="email" name="email" id="email" value="<%=email%>" required> 
 <br>
 <label for= "password">Password</label>
-<input type="password" name="password" id="password" required> 
+<input placeholder = "Password needs to be at least 6 characters" type="password" minlength = 6 name="password" id="password" required> 
 <br>
 <label for= "password_confirm">Password Confirm</label>
-<input type="password" name="password_confirm" id="password_confirm" required> 
+<input placeholder = "Password needs to be at least 6 characters" type="password" minlength = 6 name="password_confirm" id="password_confirm" required> 
 <br>
+<br>
+<br>
+<%if check == false %>
+    Password should match and Email Address should be unique.
+<br>
+<%end%>
 <button>Sign Up</button>
 
 </form>
+
