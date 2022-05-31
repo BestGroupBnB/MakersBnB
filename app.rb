@@ -96,6 +96,7 @@ class WebApplicationServer < Sinatra::Base
   
   # spaces
   get "/spaces" do
+    redirect "/login" unless session[:user]
     spaces_entries = spaces_table.list
     erb :spaces, locals: {
       spaces_entries: spaces_entries
