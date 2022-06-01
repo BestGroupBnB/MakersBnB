@@ -16,7 +16,7 @@ def reset_tables(db)
   db.run("DROP TABLE IF EXISTS users CASCADE;")
   db.run("CREATE TABLE users (id SERIAL PRIMARY KEY, email TEXT NOT NULL, password TEXT NOT NULL);")
 
-  db.run("DROP TABLE IF EXISTS spaces;")
+  db.run("DROP TABLE IF EXISTS spaces CASCADE;")
   db.run("CREATE TABLE spaces (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
@@ -25,6 +25,21 @@ def reset_tables(db)
     date_from TEXT NOT NULL,
     date_to TEXT NOT NULL,
     user_id INT REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
+    );")
+
+  db.run("DROP TABLE IF EXISTS requests;")
+  db.run("CREATE TABLE requests(
+    id SERIAL PRIMARY KEY,
+    space_id INT REFERENCES spaces(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    requester_id INT REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    owner_id INT REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
+    );")
+
+  db.run("DROP TABLE IF EXISTS dates;")
+  db.run("CREATE TABLE dates(
+    id SERIAL PRIMARY KEY,
+    space_id INT REFERENCES spaces(id) ON UPDATE CASCADE ON DELETE CASCADE,
+    available_date TEXT NOT NULL
     );")
 
   # Add your table creation SQL here

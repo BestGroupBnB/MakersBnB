@@ -11,6 +11,8 @@ require "user_entity"
 require "space_entity"
 require "spaces_table"
 
+require "dates_table"
+
 class WebApplicationServer < Sinatra::Base
   # This line allows us to send HTTP Verbs like `DELETE` using forms
   use Rack::MethodOverride
@@ -39,10 +41,10 @@ class WebApplicationServer < Sinatra::Base
     $global[:spaces_table] ||= SpacesTable.new($global[:db])
   end
 
-  # Start your server using `rackup`.
-  # It will sit there waiting for requests. It isn't broken!
+  def dates_table
+    $global[:dates_table] ||= DatesTable.new($global[:db])
+  end
 
-  # YOUR CODE GOES BELOW THIS LINE
   enable :sessions
 
   # sign up
@@ -79,13 +81,6 @@ class WebApplicationServer < Sinatra::Base
     # return "Authorized" # placeholders
   end
 
-  #   spaces
-  #   get "/spaces" do 
-  #     p "session id: #{session[:user]}"
-  #     redirect "/login" unless session[:user]
-  #     erb :spaces
-  #   end
-
   # logout
   get "/logout" do
     session.clear
@@ -109,7 +104,10 @@ class WebApplicationServer < Sinatra::Base
   post "/spaces" do
     space_entry = SpaceEntity.new(params[:name], params[:description], params[:price], 
 params[:date_from], params[:date_to], session[:user])
-    spaces_table.add(space_entry)
+    space_id = spaces_table.add(space_entry)
+    # dates table - add all available dates into database
+    dates_table.add(space_id, space_entry)
+
     redirect "/spaces"
   end
 
@@ -133,6 +131,12 @@ params[:date_from], params[:date_to], session[:user])
 params[:date_from], params[:date_to], session[:user])
     spaces_table.update(space_index, space_entry)
     redirect "/spaces"
+  end
+
+  # booking
+  get "/spaces/:index" do
+    space_id = params[:index]
+    erb :space, locals: { space: spaces_table.get(space_id) }
   end
 
 end
