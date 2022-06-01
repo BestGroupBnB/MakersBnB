@@ -95,7 +95,7 @@ class WebApplicationServer < Sinatra::Base
   
   # spaces
   get "/spaces" do
-    redirect "/login" unless session[:user]
+    #redirect "/login" unless session[:user]
     spaces_entries = spaces_table.list
     erb :spaces, locals: {
       spaces_entries: spaces_entries
@@ -134,5 +134,9 @@ params[:date_from], params[:date_to], session[:user])
     spaces_table.update(space_index, space_entry)
     redirect "/spaces"
   end
+
+  get "/requests" do
+    erb :request
+  end 
 
 end
