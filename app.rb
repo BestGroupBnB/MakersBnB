@@ -7,9 +7,11 @@ require 'sinatra/reloader'
 require "database_connection"
 require "users_table"
 require "user_entity"
+require "send_email"
 
 require "space_entity"
 require "spaces_table"
+
 
 
 class WebApplicationServer < Sinatra::Base
@@ -56,6 +58,7 @@ class WebApplicationServer < Sinatra::Base
     password = params[:password]
     password_confirm = params[:password_confirm]      
     if (password == password_confirm && !users_table.user_exists?(email))
+      signed_up(email)
       user_id = users_table.add(UserEntity.new(email,password,password_confirm))
       redirect "/login"
     else 
