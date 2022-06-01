@@ -11,7 +11,6 @@ require "user_entity"
 require "space_entity"
 require "spaces_table"
 
-
 class WebApplicationServer < Sinatra::Base
   # This line allows us to send HTTP Verbs like `DELETE` using forms
   use Rack::MethodOverride
@@ -48,7 +47,7 @@ class WebApplicationServer < Sinatra::Base
 
   # sign up
   get "/" do 
-    erb :index, locals:{check: true, email:""}
+    erb :index, locals: { check: true, email: "" }
   end 
 
   post "/users" do
@@ -59,7 +58,7 @@ class WebApplicationServer < Sinatra::Base
       user_id = users_table.add(UserEntity.new(email,password,password_confirm))
       redirect "/login"
     else 
-      erb :index, locals:{check: false, email: email}
+      erb :index, locals: { check: false, email: email }
     end 
   end
 
@@ -101,14 +100,15 @@ class WebApplicationServer < Sinatra::Base
     erb :spaces, locals: {
       spaces_entries: spaces_entries
     }
-   end
+  end
 
   get "/spaces/new" do
     erb :spaces_new
   end
 
   post "/spaces" do
-    space_entry = SpaceEntity.new(params[:name], params[:description], params[:price], params[:date_from], params[:date_to])
+    space_entry = SpaceEntity.new(params[:name], params[:description], params[:price], 
+params[:date_from], params[:date_to], session[:user])
     spaces_table.add(space_entry)
     redirect "/spaces"
   end
@@ -129,7 +129,9 @@ class WebApplicationServer < Sinatra::Base
 
   patch "/spaces/:index" do
     space_index = params[:index]
-    spaces_table.update(space_index, params[:name], params[:description], params[:price], params[:date_from], params[:date_to])
+    space_entry = SpaceEntity.new(params[:name], params[:description], params[:price], 
+params[:date_from], params[:date_to], session[:user])
+    spaces_table.update(space_index, space_entry)
     redirect "/spaces"
   end
 

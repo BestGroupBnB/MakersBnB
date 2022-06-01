@@ -1,11 +1,12 @@
 class SpaceEntity
 
-  def initialize(name, description, price, date_from, date_to,  id = nil)
+  def initialize(name, description, price, date_from, date_to,  user_id, id = nil)
     @name = name
     @description = description
     @price = price
     @date_from = date_from
     @date_to = date_to
+    @user_id = user_id
     @id = id
   end
 
@@ -27,6 +28,10 @@ class SpaceEntity
 
   def date_to
     return @date_to
+  end
+
+  def user_id
+    return @user_id
   end
 
   def id

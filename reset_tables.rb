@@ -13,7 +13,7 @@ require "database_connection"
 
 def reset_tables(db)
 
-  db.run("DROP TABLE IF EXISTS users;")
+  db.run("DROP TABLE IF EXISTS users CASCADE;")
   db.run("CREATE TABLE users (id SERIAL PRIMARY KEY, email TEXT NOT NULL, password TEXT NOT NULL);")
 
   db.run("DROP TABLE IF EXISTS spaces;")
@@ -23,9 +23,9 @@ def reset_tables(db)
     description TEXT NOT NULL,
     price INT NOT NULL,
     date_from TEXT NOT NULL,
-    date_to TEXT NOT NULL
+    date_to TEXT NOT NULL,
+    user_id INT REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
     );")
-
 
   # Add your table creation SQL here
   # Each one should be a pair of lines:
