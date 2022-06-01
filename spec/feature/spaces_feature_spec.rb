@@ -6,11 +6,31 @@ RSpec.describe "Spaces Feature", type: :feature do
   end
 
   it "starts with an empty list of examples" do
+    visit "/"
+    fill_in "email", with: "example@gmail.com"
+    fill_in "password", with: "password1"
+    fill_in "password_confirm", with: "password1"
+    click_button "Sign Up"
+    visit "/login"
+    fill_in "email", with: "example@gmail.com"
+    fill_in "password", with: "password1"
+    click_button "Login"
+
     visit "/spaces"
     expect(page).to have_content "There are no spaces available."
   end
 
   it "adds and lists spaces" do
+    visit "/"
+    fill_in "email", with: "example@gmail.com"
+    fill_in "password", with: "password1"
+    fill_in "password_confirm", with: "password1"
+    click_button "Sign Up"
+    visit "/login"
+    fill_in "email", with: "example@gmail.com"
+    fill_in "password", with: "password1"
+    click_button "Login"
+
     visit "/spaces"
     click_link "List a Space"
     fill_in "Name", with: "Mazury"
@@ -27,6 +47,16 @@ RSpec.describe "Spaces Feature", type: :feature do
   end
 
   it "adds and lists multiple spaces" do
+    visit "/"
+    fill_in "email", with: "example@gmail.com"
+    fill_in "password", with: "password1"
+    fill_in "password_confirm", with: "password1"
+    click_button "Sign Up"
+    visit "/login"
+    fill_in "email", with: "example@gmail.com"
+    fill_in "password", with: "password1"
+    click_button "Login"
+
     visit "/spaces"
     click_link "List a Space"
     fill_in "Name", with: "Mazury"
@@ -72,6 +102,16 @@ RSpec.describe "Spaces Feature", type: :feature do
   end
 
   it "deletes spaces" do
+    visit "/"
+    fill_in "email", with: "example@gmail.com"
+    fill_in "password", with: "password1"
+    fill_in "password_confirm", with: "password1"
+    click_button "Sign Up"
+    visit "/login"
+    fill_in "email", with: "example@gmail.com"
+    fill_in "password", with: "password1"
+    click_button "Login"
+
     visit "/spaces"
     click_link "List a Space"
     fill_in "Name", with: "Mazury"
@@ -119,6 +159,16 @@ RSpec.describe "Spaces Feature", type: :feature do
   end
 
   it "updates spaces" do
+    visit "/"
+    fill_in "email", with: "example@gmail.com"
+    fill_in "password", with: "password1"
+    fill_in "password_confirm", with: "password1"
+    click_button "Sign Up"
+    visit "/login"
+    fill_in "email", with: "example@gmail.com"
+    fill_in "password", with: "password1"
+    click_button "Login"
+
     visit "/spaces"
     click_link "List a Space"
     fill_in "Name", with: "Mazury"
@@ -176,7 +226,5 @@ RSpec.describe "Spaces Feature", type: :feature do
     expect(page).to have_content "04022023"
     expect(page).to have_content "20022023"
   end
-
-
 
 end

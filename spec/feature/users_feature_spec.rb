@@ -39,7 +39,7 @@ RSpec.describe "Users Feature", type: :feature do
     fill_in "Password", with: "spaceowner1"
     click_button "Login"
 
-    expect(page).to have_content("Authorized")
+    expect(page).to have_link("Logout")
 
   end
 
