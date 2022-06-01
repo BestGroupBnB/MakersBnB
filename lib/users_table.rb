@@ -19,6 +19,12 @@ class UsersTable
     return row_to_object(user[0])
   end
 
+  def user_exists?(email)
+    user_id = @db.run("SELECT id FROM users WHERE email=$1;",[email])
+    return false if user_id.to_a.empty? 
+    return true
+  end 
+
   def row_to_object(row)
     return UserEntity.new(
         row["email"],
