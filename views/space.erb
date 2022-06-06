@@ -5,11 +5,12 @@
 <center><h1><%=space.name%></h1></center>
 <center><h4><%=space.description%></h4></center>
 
-<label for="dates">Choose a date:</label>
-
-<select name="dates" id="dates">
-  <% dates.map do |date| %>
-    <option value="<%= date %>"><%= date %></option>
-  
-  <%end%>
-</select>
+<form action="" method="POST">
+    <label for="dates">Choose a date:</label>
+    <select name="dates" id="dates">
+    <% dates.map do |date| %>
+        <option value="<%= date %>"><%= date %></option>
+    <%end%>
+    </select>
+    <button>Book</button>
+</form>

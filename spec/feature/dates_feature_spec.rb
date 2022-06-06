@@ -5,6 +5,7 @@ RSpec.describe "Booking Feature", type: :feature do
     # DatabaseHelpers.clear_table("spaces")
     DatabaseHelpers.clear_table("users")
     DatabaseHelpers.clear_table("spaces")
+    DatabaseHelpers.clear_table("dates")
     DatabaseHelpers.clear_table("requests")
     db = DatabaseHelpers.test_db_connection
     db.run("INSERT INTO users (email, password) VALUES('user1@gmail.com','user1')")
@@ -17,6 +18,13 @@ RSpec.describe "Booking Feature", type: :feature do
     db.run("INSERT INTO spaces (name,description,price,date_from,date_to,user_id) VALUES('space3','space3description',3,'2022-06-01','2022-06-06',3)")
     db.run("INSERT INTO spaces (name,description,price,date_from,date_to,user_id) VALUES('space4','space4description',4,'2022-06-01','2022-06-06',4)")
  
+    db.run("INSERT INTO dates (id, space_id, available_date) VALUES (1, 1 ,'2022-06-01')")
+    db.run("INSERT INTO dates (id, space_id, available_date) VALUES (2, 1 ,'2022-06-02')")
+    db.run("INSERT INTO dates (id, space_id, available_date) VALUES (3, 1 ,'2022-06-03')")
+    db.run("INSERT INTO dates (id, space_id, available_date) VALUES (4, 1 ,'2022-06-04')")
+    db.run("INSERT INTO dates (id, space_id, available_date) VALUES (5, 1 ,'2022-06-05')")
+    db.run("INSERT INTO dates (id, space_id, available_date) VALUES (6, 1 ,'2022-06-06')")
+
   end
 
   it "should navigate me to the booking page" do
@@ -39,9 +47,11 @@ RSpec.describe "Booking Feature", type: :feature do
     expect(page).to have_content("Book a Space")
     click_link "user1_link"
     expect(page).to have_content("space1")
-    find("option[value='2022-06-03']").click
-    #page.select "2022-06-03", from: "dates"
-    #click_button "Book"
+    # find("option[value='2022-06-03']").click
+    # save_and_open_page
+
+    page.select "2022-06-03", :from => "dates"
+    click_button "Book"
 
   end
   
