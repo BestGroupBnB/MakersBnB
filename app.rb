@@ -145,12 +145,12 @@ params[:date_from], params[:date_to], session[:user])
   get "/requests" do
     request_entries = requests_table.list
     user_id = session[:user]
-    requests_table.requests_i_have_received(user_id)
+      # requests_table.requests_i_have_received(user_id)
   #  SELECT * FROM requests wehere requester_id = user_id 
   #  SELECT * frpm reqeuests where owner_id = user_id 
-  #  erb :request, locals: {
-  #    request_entires: request_entries
-  #  }
+   erb :request, locals: {
+      request_entries: request_entries
+    }
   end 
 
 end
