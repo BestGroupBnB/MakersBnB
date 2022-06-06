@@ -15,7 +15,11 @@ class DatesTable
     end
   end  
 
-  def list(user_id)
+  def list(space_id)
+    result = @db.run("SELECT available_date FROM dates WHERE space_id = $1;",[space_id])
+    return result.to_a.map do |element|
+      element["available_date"]
+    end
   end
 
   def range_to_array(space_entry)

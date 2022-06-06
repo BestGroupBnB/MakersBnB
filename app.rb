@@ -136,7 +136,7 @@ params[:date_from], params[:date_to], session[:user])
   # booking
   get "/spaces/:index" do
     space_id = params[:index]
-    erb :space, locals: { space: spaces_table.get(space_id) }
+    erb :space, locals: { space: spaces_table.get(space_id), dates: dates_table.list(space_id)}
   end
 
 end
