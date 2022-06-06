@@ -15,6 +15,9 @@ class DatesTable
     end
   end  
 
+  def list(user_id)
+  end
+
   def range_to_array(space_entry)
     
     date_from = DateTime.parse(space_entry.date_from)
