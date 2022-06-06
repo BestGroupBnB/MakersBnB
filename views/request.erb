@@ -2,9 +2,30 @@
 <a href="/spaces">Spaces</a>
 
 <center><h1>Requests</h1></center>
-<div style="float: left">Requests I've made</div>
-<% if request_entries.empty?%>
-    <div style="float: left">You have no requests</div>
+<%if requests_by_user_id.empty?%>
+    <div style="float: left; width: 50%; height: 100vh">You have made no requests</div>
+<%else%>
+    <div style="float: left; width: 50%; height: 100vh">Requests I've made</div>
+    <% requests_by_user_id.to_a.map do |request|%>
+        <div style="display: flex; flex-direction: column;" >
+            <%= request.name%> 
+            <%= request.description%>
+            <%= request.price%>
+            <%= request.booking_date%>   
+        </div>
+    <%end%>
 <%end%>
-
-<div style="float: right">Requests I've received</div><div style="clear: both;"></div>
+<%if requests_by_owner_id.empty?%>
+    <div style="float: right">You have received no requests</div>
+<%else%>
+    <div>Requests I've received</div>
+    <br>
+    <% requests_by_owner_id.to_a.map do |request|%>
+        <div style="display: flex; flex-direction: column;">
+            <%= request.name%> 
+            <%= request.description%>
+            <%= request.price%>
+            <%= request.booking_date%>   
+        </div>
+    <%end%>
+<%end%>
