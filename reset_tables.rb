@@ -27,7 +27,7 @@ def reset_tables(db)
     user_id INT REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
     );")
 
-  db.run("DROP TABLE IF EXISTS requests;")
+  db.run("DROP TABLE IF EXISTS requests CASCADE;")
   db.run("CREATE TABLE requests(
     id SERIAL PRIMARY KEY,
     space_id INT REFERENCES spaces(id) ON UPDATE CASCADE ON DELETE CASCADE,
