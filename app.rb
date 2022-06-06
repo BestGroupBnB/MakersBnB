@@ -11,6 +11,9 @@ require "user_entity"
 require "space_entity"
 require "spaces_table"
 
+require "request_entity"
+require "requests_table"
+
 class WebApplicationServer < Sinatra::Base
   # This line allows us to send HTTP Verbs like `DELETE` using forms
   use Rack::MethodOverride
@@ -37,6 +40,10 @@ class WebApplicationServer < Sinatra::Base
 
   def spaces_table
     $global[:spaces_table] ||= SpacesTable.new($global[:db])
+  end
+
+  def requests_table
+    $global[:requests_table] ||= RequestTable.new($global[:db])
   end
 
   # Start your server using `rackup`.
@@ -136,7 +143,14 @@ params[:date_from], params[:date_to], session[:user])
   end
 
   get "/requests" do
-    erb :request
+    request_entries = requests_table.list
+    user_id = session[:user]
+    requests_table.requests_i_have_received(user_id)
+  #  SELECT * FROM requests wehere requester_id = user_id 
+  #  SELECT * frpm reqeuests where owner_id = user_id 
+  #  erb :request, locals: {
+  #    request_entires: request_entries
+  #  }
   end 
 
 end
