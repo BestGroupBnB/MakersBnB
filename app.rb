@@ -11,8 +11,12 @@ require "user_entity"
 require "space_entity"
 require "spaces_table"
 
+<<<<<<< HEAD
 require "request_entity"
 require "requests_table"
+=======
+require "dates_table"
+>>>>>>> d2ce4c8997f4f95b0a115198f0bc865ab3b94c90
 
 class WebApplicationServer < Sinatra::Base
   # This line allows us to send HTTP Verbs like `DELETE` using forms
@@ -42,14 +46,19 @@ class WebApplicationServer < Sinatra::Base
     $global[:spaces_table] ||= SpacesTable.new($global[:db])
   end
 
+<<<<<<< HEAD
   def requests_table
     $global[:requests_table] ||= RequestTable.new($global[:db])
   end
 
   # Start your server using `rackup`.
   # It will sit there waiting for requests. It isn't broken!
+=======
+  def dates_table
+    $global[:dates_table] ||= DatesTable.new($global[:db])
+  end
+>>>>>>> d2ce4c8997f4f95b0a115198f0bc865ab3b94c90
 
-  # YOUR CODE GOES BELOW THIS LINE
   enable :sessions
 
   # sign up
@@ -86,13 +95,6 @@ class WebApplicationServer < Sinatra::Base
     # return "Authorized" # placeholders
   end
 
-  #   spaces
-  #   get "/spaces" do 
-  #     p "session id: #{session[:user]}"
-  #     redirect "/login" unless session[:user]
-  #     erb :spaces
-  #   end
-
   # logout
   get "/logout" do
     session.clear
@@ -116,7 +118,10 @@ class WebApplicationServer < Sinatra::Base
   post "/spaces" do
     space_entry = SpaceEntity.new(params[:name], params[:description], params[:price], 
 params[:date_from], params[:date_to], session[:user])
-    spaces_table.add(space_entry)
+    space_id = spaces_table.add(space_entry)
+    # dates table - add all available dates into database
+    dates_table.add(space_id, space_entry)
+
     redirect "/spaces"
   end
 
@@ -142,13 +147,28 @@ params[:date_from], params[:date_to], session[:user])
     redirect "/spaces"
   end
 
+  # booking/dates
+  get "/spaces/:index" do
+    space_id = params[:index]
+    erb :space, locals: { space: spaces_table.get(space_id), dates: dates_table.list(space_id) }
+  end
+
+  post "/space/:index" do
+    space_id = params[:index]
+    # update request table
+    # class.update_to_request(space_id,session[:user])
+    # delete date from dates_table
+    redirect '/spaces' # changable
+  end
+
+  #requests
   get "/requests" do
     request_entries = requests_table.list
     user_id = session[:user]
       # requests_table.requests_i_have_received(user_id)
   #  SELECT * FROM requests wehere requester_id = user_id 
   #  SELECT * frpm reqeuests where owner_id = user_id 
-   erb :request, locals: {
+  erb :request, locals: {
       request_entries: request_entries
     }
   end 
