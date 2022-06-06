@@ -11,12 +11,10 @@ require "user_entity"
 require "space_entity"
 require "spaces_table"
 
-<<<<<<< HEAD
 require "request_entity"
 require "requests_table"
-=======
+
 require "dates_table"
->>>>>>> d2ce4c8997f4f95b0a115198f0bc865ab3b94c90
 
 class WebApplicationServer < Sinatra::Base
   # This line allows us to send HTTP Verbs like `DELETE` using forms
@@ -46,18 +44,15 @@ class WebApplicationServer < Sinatra::Base
     $global[:spaces_table] ||= SpacesTable.new($global[:db])
   end
 
-<<<<<<< HEAD
   def requests_table
     $global[:requests_table] ||= RequestTable.new($global[:db])
   end
 
   # Start your server using `rackup`.
   # It will sit there waiting for requests. It isn't broken!
-=======
   def dates_table
     $global[:dates_table] ||= DatesTable.new($global[:db])
   end
->>>>>>> d2ce4c8997f4f95b0a115198f0bc865ab3b94c90
 
   enable :sessions
 
@@ -104,7 +99,7 @@ class WebApplicationServer < Sinatra::Base
   
   # spaces
   get "/spaces" do
-    #redirect "/login" unless session[:user]
+    # redirect "/login" unless session[:user]
     spaces_entries = spaces_table.list
     erb :spaces, locals: {
       spaces_entries: spaces_entries
@@ -161,14 +156,14 @@ params[:date_from], params[:date_to], session[:user])
     redirect '/spaces' # changable
   end
 
-  #requests
+  # requests
   get "/requests" do
     request_entries = requests_table.list
     user_id = session[:user]
       # requests_table.requests_i_have_received(user_id)
   #  SELECT * FROM requests wehere requester_id = user_id 
   #  SELECT * frpm reqeuests where owner_id = user_id 
-  erb :request, locals: {
+    erb :request, locals: {
       request_entries: request_entries
     }
   end 
