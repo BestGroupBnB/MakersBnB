@@ -84,6 +84,7 @@ class WebApplicationServer < Sinatra::Base
     user = users_table.get_password_from_email(email)
     if user.password == password
       session[:user] = user.id 
+      p "----------logged in user id: #{session[:user]}--------"
       redirect "/spaces"
     end
     return "Unauthorized" unless user.password == password # redirect "/spaces/user_id"
@@ -92,8 +93,8 @@ class WebApplicationServer < Sinatra::Base
 
   # logout
   get "/logout" do
-    session.clear
     p "session: #{session[:user]}"
+    session.clear
     redirect "/login"
   end
   
@@ -151,9 +152,12 @@ params[:date_from], params[:date_to], session[:user])
   post "/space/:index" do
     space_id = params[:index]
     # update request table
-    # class.update_to_request(space_id,session[:user])
+    owner_id = spaces_table.get(space_id).user_id
+    p "----------logged in user id: #{session[:user]}--------"
+    request_entity = RequestEntity.new(space_id, session[:user],owner_id)
+    requests_table.add(request_entity)
     # delete date from dates_table
-    redirect '/spaces' # changable
+    redirect '/spaces'
   end
 
   # requests

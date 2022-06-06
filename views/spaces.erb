@@ -17,7 +17,7 @@
     <center><a href="/spaces/new">List a Space</a></center>
   </p>
   <% spaces_entries.each do |space| %>
-    <a href="/spaces/<%=space.user_id%>" id="user<%=space.user_id%>_link" style="text-decoration: none;color: white;">
+    <a href="/spaces/<%=space.id%>" id="user<%=space.id%>_link" style="text-decoration: none;color: white;">
       <section>
         <h2><%= space.name %></h2>
         Description, <%= space.description %>

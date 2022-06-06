@@ -31,7 +31,6 @@ new_space_entry.date_from, new_space_entry.date_to, index])
   def get(index)
     result = @db.run("SELECT * FROM spaces WHERE id = $1;", [index])
     return row_to_object(result[0])
-
   end
 
   private
