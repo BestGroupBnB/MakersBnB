@@ -52,7 +52,38 @@ RSpec.describe "Booking Feature", type: :feature do
 
     page.select "2022-06-03", :from => "dates"
     click_button "Book"
+  end
 
+  it "submit using the dropdown box on booking page" do
+    visit "/login"
+    fill_in "email", with: "user1@gmail.com"
+    fill_in "password", with: "user1"
+    click_button "Login"
+
+    expect(page).to have_content("Book a Space")
+    click_link "user1_link"
+    expect(page).to have_content("space1")
+    # find("option[value='2022-06-03']").click
+    # save_and_open_page
+
+    page.select "2022-06-03", :from => "dates"
+    click_button "Book"
+  end
+
+  it "submit using the dropdown box on booking page" do
+    visit "/login"
+    fill_in "email", with: "user1@gmail.com"
+    fill_in "password", with: "user1"
+    click_button "Login"
+
+    expect(page).to have_content("Book a Space")
+    click_link "user1_link"
+    expect(page).to have_content("space1")
+    # find("option[value='2022-06-03']").click
+    # save_and_open_page
+
+    page.select "2022-06-03", :from => "dates"
+    click_button "Book"
   end
   
 end

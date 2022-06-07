@@ -7,15 +7,18 @@ class DatesTable
   end
 
   def add(space_id, space_entry)
-    data = range_to_array(space_entry).map do |date|
-      result = @db.run("INSERT INTO dates(space_id,available_date) VALUES($1,$2) RETURNING id;",
-[space_id,date])
-    end
     return range_to_array(space_entry).map do |date|
       result = @db.run("INSERT INTO dates(space_id,available_date) VALUES($1,$2) RETURNING id;",
 [space_id,date])
+      result[0]["id"]
     end
   end  
+
+  def delete(space_id, booking_date)
+    result = @db.run("DELETE FROM dates WHERE space_id=$1 AND available_date=$2 RETURNING id;",
+[space_id,booking_date])
+    return result.nil? ? result[0]["id"] : "false"
+  end
 
   def list(space_id)
     result = @db.run("SELECT available_date FROM dates WHERE space_id = $1;",[space_id])

@@ -32,7 +32,6 @@ class WebApplicationServer < Sinatra::Base
   end
 
   configure :test do
-    # In test mode, connect to the test database
     db = DatabaseConnection.new("localhost", "bestgroupbnb_test")
     $global = { db: db }
   end
@@ -49,15 +48,13 @@ class WebApplicationServer < Sinatra::Base
     $global[:requests_table] ||= RequestTable.new($global[:db])
   end
 
-  # Start your server using `rackup`.
-  # It will sit there waiting for requests. It isn't broken!
   def dates_table
     $global[:dates_table] ||= DatesTable.new($global[:db])
   end
 
   enable :sessions
 
-  # sign up
+  # SIGNUP
   get "/" do 
     erb :index, locals: { check: true, email: "" }
   end 
@@ -74,32 +71,32 @@ class WebApplicationServer < Sinatra::Base
     end 
   end
 
-  # login
+  # LOGIN
   get "/login" do
     erb :login
   end
 
   post "/login" do
-    email = params[:email] # UNIQUE
+    email = params[:email]
     password = params[:password]
     user = users_table.get_password_from_email(email)
     if user.password == password
       session[:user] = user.id 
-      p "----------logged in user id: #{session[:user]}--------"
+      # p "----------logged in user id: #{session[:user]}--------"
       redirect "/spaces"
     end
     return "Unauthorized" unless user.password == password # redirect "/spaces/user_id"
     # return "Authorized" # placeholders
   end
 
-  # logout
+  # LOGOUT
   get "/logout" do
-    p "session: #{session[:user]}"
+    # p "session: #{session[:user]}"
     session.clear
     redirect "/login"
   end
   
-  # spaces
+  # SPACES
   get "/spaces" do
     # redirect "/login" unless session[:user]
     spaces_entries = spaces_table.list
@@ -132,7 +129,6 @@ params[:date_from], params[:date_to], session[:user])
       index: space_index,
       space: spaces_table.get(space_index)
     }
-
   end
 
   patch "/spaces/:index" do
@@ -143,7 +139,7 @@ params[:date_from], params[:date_to], session[:user])
     redirect "/spaces"
   end
 
-  # booking/dates
+  # BOOKING/DATES
   get "/space/:index" do
     space_id = params[:index]
     erb :space, locals: { space: spaces_table.get(space_id), dates: dates_table.list(space_id) }
@@ -154,14 +150,15 @@ params[:date_from], params[:date_to], session[:user])
     booking_date = params[:dates]
     # update request table
     owner_id = spaces_table.get(space_id).user_id
-    p "----------logged in user id: #{session[:user]}--------"
+    # p "----------logged in user id: #{session[:user]}--------"
     request_entity = RequestEntity.new(space_id, session[:user],owner_id,booking_date)
     requests_table.add(request_entity)
     # delete date from dates_table
+    dates_table.delete(space_id,booking_date)
     redirect '/requests'
   end
 
-  # requests
+  # REQUESTS
   get "/requests" do
     request_entries = requests_table.list
     user_id = session[:user]
