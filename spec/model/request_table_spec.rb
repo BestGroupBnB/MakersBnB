@@ -22,10 +22,11 @@ RSpec.describe RequestTable do
   it "adds a request to the table" do
     db = clean_and_get_database
     request = RequestTable.new(db)
-    request_id = request.add(RequestEntity.new(1,2,3))
+    request_id = request.add(RequestEntity.new(1,2,3,"2022-01-01"))
     result = request.get(request_id)
     expect(result.space_id).to eq 1
     expect(result.requester_id).to eq 2
     expect(result.owner_id).to eq 3
+    expect(result.booking_date).to eq "2022-01-01"
   end 
 end

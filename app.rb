@@ -15,6 +15,7 @@ require "request_entity"
 require "requests_table"
 
 require "dates_table"
+require "request_space_entity"
 
 class WebApplicationServer < Sinatra::Base
   # This line allows us to send HTTP Verbs like `DELETE` using forms
@@ -143,31 +144,33 @@ params[:date_from], params[:date_to], session[:user])
   end
 
   # booking/dates
-  get "/spaces/:index" do
+  get "/space/:index" do
     space_id = params[:index]
     erb :space, locals: { space: spaces_table.get(space_id), dates: dates_table.list(space_id) }
   end
 
   post "/space/:index" do
     space_id = params[:index]
+    booking_date = params[:dates]
     # update request table
     owner_id = spaces_table.get(space_id).user_id
     p "----------logged in user id: #{session[:user]}--------"
-    request_entity = RequestEntity.new(space_id, session[:user],owner_id)
+    request_entity = RequestEntity.new(space_id, session[:user],owner_id,booking_date)
     requests_table.add(request_entity)
     # delete date from dates_table
-    redirect '/spaces'
+    redirect '/requests'
   end
 
   # requests
   get "/requests" do
     request_entries = requests_table.list
     user_id = session[:user]
-      # requests_table.requests_i_have_received(user_id)
+    requests_by_user_id = requests_table.requests_i_have_made(user_id)
+    requests_by_owner_id = requests_table.requests_i_have_received(user_id)
   #  SELECT * FROM requests wehere requester_id = user_id 
   #  SELECT * frpm reqeuests where owner_id = user_id 
     erb :request, locals: {
-      request_entries: request_entries
+      request_entries: request_entries, requests_by_user_id: requests_by_user_id, requests_by_owner_id: requests_by_owner_id
     }
   end 
 
