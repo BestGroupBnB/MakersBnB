@@ -117,7 +117,6 @@ params[:date_from], params[:date_to], session[:user])
     space_id = spaces_table.add(space_entry)
     # dates table - add all available dates into database
     dates_table.add(space_id, space_entry)
-
     redirect "/spaces"
   end
 

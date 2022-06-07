@@ -8,10 +8,13 @@ class DatesTable
   end
 
   def add(space_id, space_entry)
+    data = range_to_array(space_entry).map do |date|
+      result = @db.run("INSERT INTO dates(space_id,available_date) VALUES($1,$2) RETURNING id;",
+[space_id,date])
+    end
     return range_to_array(space_entry).map do |date|
       result = @db.run("INSERT INTO dates(space_id,available_date) VALUES($1,$2) RETURNING id;",
 [space_id,date])
-      result[0]["id"]
     end
   end  
 
