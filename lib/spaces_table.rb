@@ -1,4 +1,5 @@
 require "space_entity"
+require "space_user_entity"
 
 class SpacesTable
   def initialize(db)
@@ -33,6 +34,11 @@ new_space_entry.date_from, new_space_entry.date_to, index])
     return row_to_object(result[0])
   end
 
+  def get_owner_by_spaceID(id)
+    result = @db.run("SELECT us.email FROM spaces AS sp LEFT JOIN users AS us ON sp.user_id = us.id WHERE sp.id = $1",[id])
+    return row_to_object_space_user(result[0])
+  end 
+
   private
 
   def row_to_object(row)
@@ -46,5 +52,13 @@ new_space_entry.date_from, new_space_entry.date_to, index])
       row["id"]
     )
   end
+
+  def row_to_object_space_user(row)
+    return SpaceUserEntity.new(
+      row["email"],
+      row["id"]
+    )
+  end 
+
 
 end

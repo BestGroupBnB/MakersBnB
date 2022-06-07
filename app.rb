@@ -166,8 +166,27 @@ params[:date_from], params[:date_to], session[:user])
     requests_by_owner_id = requests_table.requests_i_have_received(user_id)
   #  SELECT * FROM requests wehere requester_id = user_id 
   #  SELECT * frpm reqeuests where owner_id = user_id 
-    erb :request, locals: {
+    erb :requests, locals: {
       request_entries: request_entries, requests_by_user_id: requests_by_user_id, requests_by_owner_id: requests_by_owner_id
+    }
+  end 
+
+  get "/request/:index" do
+    request_entries = requests_table.list
+    request_id = params[:index]
+    user_id = session[:user]
+    request_by_req_id = requests_table.get_request_space_entity(request_id)
+    #binding.irb
+    requested_by = spaces_table.get_owner_by_spaceID(request_by_req_id.sp_id)
+    other_bookings = []
+    request_entries.to_a.map do |request|
+      if (request.booking_date == request_by_req_id.booking_date and request.requester_id != request_by_req_id.id)
+        other_bookings.push(request)
+      end
+    end
+    #binding.irb
+    erb :request, locals:{
+      request_by_req_id: request_by_req_id, requested_by: requested_by, other_bookings: other_bookings
     }
   end 
 

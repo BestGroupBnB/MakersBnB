@@ -33,7 +33,8 @@ def reset_tables(db)
     space_id INT REFERENCES spaces(id) ON UPDATE CASCADE ON DELETE CASCADE,
     requester_id INT REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
     owner_id INT REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE,
-    booking_date TEXT NOT NULL
+    booking_date TEXT NOT NULL,
+    status TEXT NOT NULL
     );")
 
   db.run("DROP TABLE IF EXISTS dates;")

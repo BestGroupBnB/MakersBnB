@@ -1,31 +1,11 @@
 <a href="/logout">Logout</a>
 <a href="/spaces">Spaces</a>
+<a href="/requests">Requests</a>
 
-<center><h1>Requests</h1></center>
-<%if requests_by_user_id.empty?%>
-    <div style="float: left; width: 50%; height: 100vh">You have made no requests</div>
-<%else%>
-    <div style="float: left; width: 50%; height: 100vh">Requests I've made</div>
-    <% requests_by_user_id.to_a.map do |request|%>
-        <div style="display: flex; flex-direction: column;" >
-            <%= request.name%> 
-            <%= request.description%>
-            <%= request.price%>
-            <%= request.booking_date%>   
-        </div>
-    <%end%>
-<%end%>
-<%if requests_by_owner_id.empty?%>
-    <div style="float: right">You have received no requests</div>
-<%else%>
-    <div>Requests I've received</div>
-    <br>
-    <% requests_by_owner_id.to_a.map do |request|%>
-        <div style="display: flex; flex-direction: column;">
-            <%= request.name%> 
-            <%= request.description%>
-            <%= request.price%>
-            <%= request.booking_date%>   
-        </div>
-    <%end%>
-<%end%>
+<center><h1>Request for <%=request_by_req_id.description%></h1></center>
+<div>From: <%=requested_by.email%></div>
+<div>Booking date: <%= request_by_req_id.booking_date%></div>
+<div>Other Bookings for this date: </div>
+<br>
+<button>Confirm</button> <button>Decline</button>
+
