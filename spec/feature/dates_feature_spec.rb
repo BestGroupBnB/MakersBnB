@@ -70,10 +70,10 @@ RSpec.describe "Booking Feature", type: :feature do
     click_button "Book"
   end
 
-  it "submit using the dropdown box on booking page" do
+  it "Booking a date should remove that date from dropdown" do
     visit "/login"
-    fill_in "email", with: "user1@gmail.com"
-    fill_in "password", with: "user1"
+    fill_in "email", with: "user2@gmail.com"
+    fill_in "password", with: "user2"
     click_button "Login"
 
     expect(page).to have_content("Book a Space")
@@ -81,9 +81,15 @@ RSpec.describe "Booking Feature", type: :feature do
     expect(page).to have_content("space1")
     # find("option[value='2022-06-03']").click
     # save_and_open_page
+    # Check that all the dates are there 
+    expect(page).to have_select("dates", options: ['2022-06-01','2022-06-02','2022-06-03','2022-06-04','2022-06-05','2022-06-06'])
 
     page.select "2022-06-03", :from => "dates"
     click_button "Book"
+    visit "/space/1"
+    # Check the book date is removed
+    expect(page).to have_select("dates", options: ['2022-06-01','2022-06-02','2022-06-04','2022-06-05','2022-06-06'])
+
   end
   
 end
