@@ -54,12 +54,26 @@ class WebApplicationServer < Sinatra::Base
 
   enable :sessions
 
+  def require_log_in
+    redirect "/unauthorized" unless authenticated?
+  end
+
+  def authenticated?
+    return session[:user] ? true : false
+  end
+
+  # UNAUTHORIZED
+  get "/unauthorized" do
+    erb :unauthorized
+  end
+
   # SIGNUP
   get "/" do 
     erb :index, locals: { check: true, email: "" }
   end 
 
   post "/users" do
+    require_log_in
     email = params[:email]
     password = params[:password]
     password_confirm = params[:password_confirm]      
@@ -81,24 +95,23 @@ class WebApplicationServer < Sinatra::Base
     password = params[:password]
     user = users_table.get_password_from_email(email)
     if user.password == password
+      p "user logging in...."
       session[:user] = user.id 
-      # p "----------logged in user id: #{session[:user]}--------"
       redirect "/spaces"
     end
-    return "Unauthorized" unless user.password == password # redirect "/spaces/user_id"
-    # return "Authorized" # placeholders
+    redirect "/" unless user.password == password
   end
 
   # LOGOUT
   get "/logout" do
-    # p "session: #{session[:user]}"
+    p "session: #{session[:user]} logged out"
     session.clear
     redirect "/login"
   end
   
   # SPACES
   get "/spaces" do
-    # redirect "/login" unless session[:user]
+    require_log_in
     spaces_entries = spaces_table.list
     erb :spaces, locals: {
       spaces_entries: spaces_entries
@@ -106,24 +119,27 @@ class WebApplicationServer < Sinatra::Base
   end
 
   get "/spaces/new" do
+    require_log_in
     erb :spaces_new
   end
 
   post "/spaces" do
+    require_log_in
     space_entry = SpaceEntity.new(params[:name], params[:description], params[:price], 
 params[:date_from], params[:date_to], session[:user])
     space_id = spaces_table.add(space_entry)
-    # dates table - add all available dates into database
     dates_table.add(space_id, space_entry)
     redirect "/spaces"
   end
 
   delete "/spaces/:index" do
+    require_log_in
     spaces_table.remove(params[:index].to_i)
     redirect "/spaces"
   end
 
   get "/spaces/:index/edit" do
+    require_log_in
     space_index = params[:index].to_i
     erb :spaces_edit, locals: {
       index: space_index,
@@ -132,6 +148,7 @@ params[:date_from], params[:date_to], session[:user])
   end
 
   patch "/spaces/:index" do
+    require_log_in
     space_index = params[:index]
     space_entry = SpaceEntity.new(params[:name], params[:description], params[:price], 
 params[:date_from], params[:date_to], session[:user])
@@ -141,16 +158,17 @@ params[:date_from], params[:date_to], session[:user])
 
   # BOOKING/DATES
   get "/space/:index" do
+    require_log_in
     space_id = params[:index]
     erb :space, locals: { space: spaces_table.get(space_id), dates: dates_table.list(space_id) }
   end
 
   post "/space/:index" do
+    require_log_in
     space_id = params[:index]
     booking_date = params[:dates]
     # update request table
     owner_id = spaces_table.get(space_id).user_id
-    # p "----------logged in user id: #{session[:user]}--------"
     request_entity = RequestEntity.new(space_id, session[:user],owner_id,booking_date)
     requests_table.add(request_entity)
     # delete date from dates_table
@@ -160,23 +178,22 @@ params[:date_from], params[:date_to], session[:user])
 
   # REQUESTS
   get "/requests" do
+    require_log_in
     request_entries = requests_table.list
     user_id = session[:user]
     requests_by_user_id = requests_table.requests_i_have_made(user_id)
     requests_by_owner_id = requests_table.requests_i_have_received(user_id)
-  #  SELECT * FROM requests wehere requester_id = user_id 
-  #  SELECT * frpm reqeuests where owner_id = user_id 
     erb :requests, locals: {
       request_entries: request_entries, requests_by_user_id: requests_by_user_id, requests_by_owner_id: requests_by_owner_id
     }
   end 
 
   get "/request/:index" do
+    require_log_in
     request_entries = requests_table.list
     request_id = params[:index]
     user_id = session[:user]
     request_by_req_id = requests_table.get_request_space_entity(request_id)
-    #binding.irb
     requested_by = spaces_table.get_owner_by_spaceID(request_by_req_id.sp_id)
     other_bookings = []
     request_entries.to_a.map do |request|
@@ -184,8 +201,8 @@ params[:date_from], params[:date_to], session[:user])
         other_bookings.push(request)
       end
     end
-    #binding.irb
-    erb :request, locals:{
+    # binding.irb
+    erb :request, locals: {
       request_by_req_id: request_by_req_id, requested_by: requested_by, other_bookings: other_bookings
     }
   end 

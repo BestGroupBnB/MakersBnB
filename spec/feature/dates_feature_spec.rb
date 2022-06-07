@@ -2,7 +2,6 @@ require "helpers/database_helpers"
 
 RSpec.describe "Booking Feature", type: :feature do
   before(:each) do
-    # DatabaseHelpers.clear_table("spaces")
     DatabaseHelpers.clear_table("users")
     DatabaseHelpers.clear_table("spaces")
     DatabaseHelpers.clear_table("dates")
@@ -47,9 +46,6 @@ RSpec.describe "Booking Feature", type: :feature do
     expect(page).to have_content("Book a Space")
     click_link "user1_link"
     expect(page).to have_content("space1")
-    # find("option[value='2022-06-03']").click
-    # save_and_open_page
-
     page.select "2022-06-03", :from => "dates"
     click_button "Book"
   end
@@ -63,9 +59,6 @@ RSpec.describe "Booking Feature", type: :feature do
     expect(page).to have_content("Book a Space")
     click_link "user1_link"
     expect(page).to have_content("space1")
-    # find("option[value='2022-06-03']").click
-    # save_and_open_page
-
     page.select "2022-06-03", :from => "dates"
     click_button "Book"
   end
@@ -79,8 +72,6 @@ RSpec.describe "Booking Feature", type: :feature do
     expect(page).to have_content("Book a Space")
     click_link "user1_link"
     expect(page).to have_content("space1")
-    # find("option[value='2022-06-03']").click
-    # save_and_open_page
     # Check that all the dates are there 
     expect(page).to have_select("dates", options: ['2022-06-01','2022-06-02','2022-06-03','2022-06-04','2022-06-05','2022-06-06'])
 

@@ -2,33 +2,48 @@
 <a href="/spaces">Spaces</a>
 
 <center><h1>Requests</h1></center>
-<%if requests_by_user_id.empty?%>
-    <div style="float: left; width: 50%; height: 100vh">You have made no requests</div>
-<%else%>
-    <div style="float: left; width: 50%; height: 100vh">Requests I've made</div>
-    <% requests_by_user_id.to_a.map do |request|%>
-        <div style="display: flex; flex-direction: column;" >
-            <%= request.name%> 
-            <%= request.description%>
-            <%= request.price%>
-            <%= request.booking_date%>  
-            <%= request.status%>   
-        </div>
-    <%end%>
-<%end%>
-<%if requests_by_owner_id.empty?%>
-    <div style="float: right">You have received no requests</div>
-<%else%>
-    <div>Requests I've received</div>
-    <br>
-    <% requests_by_owner_id.to_a.map do |request|%>
-    <a href="/request/<%=request.id%>" style="text-decoration: none;color: white;">
-
-        <div style="display: flex; flex-direction: column;">
-            <%= request.name%> 
-            <%= request.description%>
-            <%= request.price%>
-            <%= request.booking_date%> 
-        </div>
-    <%end%>
-<%end%>
+<div class="parent">
+    <div class="child">
+        <%if requests_by_user_id.empty?%>
+            <center><strong>You have made no requests</strong></center>
+        <%else%>
+            <center><strong>Requests I've made</strong>
+                <% requests_by_user_id.to_a.map do |request|%>
+                    <article>
+                        <div style="display: flex; flex-direction: column;" >
+                            <%= request.name%>
+                            <%= request.description%>
+                            <%= request.price%>
+                            <%= request.booking_date%>
+                            <br>  
+                            <%= request.status%>   
+                        </div>
+                    </article>
+                <%end%>
+            </center>
+        <%end%>
+    </div>
+    <div class="child">
+        <%if requests_by_owner_id.empty?%>
+            <center><strong>You have received no requests</strong></center>
+        <%else%>
+            <center><strong>Requests I've received</strong>
+                <% requests_by_owner_id.to_a.map do |request|%>
+                    
+                        <article>
+                        <a href="/request/<%=request.id%>" style="text-decoration: none;color: white;">
+                            <div style="display: flex; flex-direction: column;">
+                                <%= request.name%> 
+                                <%= request.description%>
+                                <%= request.price%>
+                                <br>
+                                <%= request.booking_date%> 
+                            </div>
+                            </a>
+                        </article>
+                    
+                <%end%>
+            <center>
+        <%end%>
+    </div>
+</div>
